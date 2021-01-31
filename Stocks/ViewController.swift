@@ -7,12 +7,15 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+final class ViewController: UIViewController {
     
     //UI
     @IBOutlet var companyNameLabel: UILabel!
     @IBOutlet var companyPickerView: UIPickerView!
     @IBOutlet var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet var companySymbolLabel: UILabel!
+    @IBOutlet var priceLabel: UILabel!
+    @IBOutlet var priceChangeLabel: UILabel!
     
     //Private
     private lazy var companies = [
@@ -29,11 +32,13 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 
         companyNameLabel.text = "Tinkoff"
+        
         companyPickerView.dataSource = self
         companyPickerView.delegate = self
         
-        activityIndicator.startAnimating()
-        requestQuote(for: "AAPL")
+        activityIndicator.hidesWhenStopped = true
+        
+        requestQuoteUpdate()
     }
 }
 
@@ -48,24 +53,85 @@ extension ViewController: UIPickerViewDataSource {
         return companies.keys.count
     }
     
+//    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+//        activityIndicator.startAnimating()
+//
+//        let selectedSymbol = Array(companies.values)[row]
+//        requestQuote(for: selectedSymbol)
+//    }
+
+
     // MARK: - Private
     
+    private func parseQuote(from data: Data) {
+        do {
+            let jsonObject = try JSONSerialization.jsonObject(with: data)
+            
+            guard
+                let json = jsonObject as? [String: Any],
+                let companyName = json["companyName"] as? String,
+                let companySymbol = json["symbol"] as? String,
+                let price = json["latestPrice"] as? Double,
+                let priceChange = json["change"] as? Double else { return print("Invalid JSON") }
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.displayStockInfo(companyName: companyName,
+                                       companySymbol: companySymbol,
+                                       price: price,
+                                       priceChange: priceChange)
+            }
+        } catch {
+            print("JSON parsing error: " + error.localizedDescription)
+        }
+    }
+    
+    private func displayStockInfo (companyName: String,
+                                   companySymbol: String,
+                                   price: Double,
+                                   priceChange: Double) {
+        activityIndicator.stopAnimating()
+        companyNameLabel.text = companyName
+        companySymbolLabel.text = companySymbol
+        priceLabel.text = "\(price)"
+        priceChangeLabel.text = "\(priceChange)"
+    }
+    
     private func requestQuote(for symbol: String) {
-        let token = "pk_5949bbf8a9a5406387e6e322dd2f1c1b "
-        
+        let token = "pk_5949bbf8a9a5406387e6e322dd2f1c1b"
         guard let url = URL(string: "https://cloud.iexapis.com/stable/stock/\(symbol)/quote?token=\(token)") else {
             return
         }
         
         let dataTask = URLSession.shared.dataTask(with: url) { (data, response, error) in
-            if let data = data {
-                print(data)
+            if let data = data,
+               (response as? HTTPURLResponse)?.statusCode == 200,
+               error == nil {
+                self.parseQuote(from: data)
+            } else {
+                print("Network error!")
             }
         }
         
         dataTask.resume()
     }
+    
+    private func requestQuoteUpdate() {
+        activityIndicator.startAnimating()
+        companyNameLabel.text = "-"
+        companySymbolLabel.text = "-"
+        priceLabel.text = "-"
+        priceChangeLabel.text = "-"
+        
+        let selectedRow = companyPickerView.selectedRow(inComponent: 0)
+        let selectedSymbol = Array(companies.values)[selectedRow]
+        requestQuote(for: selectedSymbol)
 }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectedRow row: Int, inComponent component: Int) {
+        requestQuoteUpdate()
+    }
+}
+
 
 // MARK: - UIPickerViewDelegate
 
@@ -73,4 +139,12 @@ extension ViewController: UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return Array(companies.keys)[row]
     }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        activityIndicator.startAnimating()
+        
+        let selectedSymbol = Array(companies.values)[row]
+        requestQuote(for: selectedSymbol)
+    }
 }
+
