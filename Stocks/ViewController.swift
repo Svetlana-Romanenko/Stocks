@@ -9,15 +9,21 @@ import UIKit
 
 final class ViewController: UIViewController {
     
-    //UI
+    //MARK: - IB Outlets
+    
     @IBOutlet var companyNameLabel: UILabel!
-    @IBOutlet var companyPickerView: UIPickerView!
-    @IBOutlet var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet var priceChangeLabel: UILabel!
     @IBOutlet var companySymbolLabel: UILabel!
     @IBOutlet var priceLabel: UILabel!
-    @IBOutlet var priceChangeLabel: UILabel!
     
-    //Private
+    @IBOutlet var companyPickerView: UIPickerView!
+    
+    @IBOutlet var activityIndicator: UIActivityIndicatorView!
+
+    @IBOutlet var logoImage: UIImageView!
+    
+    //MARK: - Private properties
+    
     private lazy var companies = [
         "Apple": "AAPL",
         "Microsoft": "MSFT",
@@ -52,14 +58,6 @@ extension ViewController: UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return companies.keys.count
     }
-    
-//    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-//        activityIndicator.startAnimating()
-//
-//        let selectedSymbol = Array(companies.values)[row]
-//        requestQuote(for: selectedSymbol)
-//    }
-
 
     // MARK: - Private
     
@@ -72,7 +70,11 @@ extension ViewController: UIPickerViewDataSource {
                 let companyName = json["companyName"] as? String,
                 let companySymbol = json["symbol"] as? String,
                 let price = json["latestPrice"] as? Double,
-                let priceChange = json["change"] as? Double else { return print("Invalid JSON") }
+                let priceChange = json["change"] as? Double,
+                let logoImage = json["logos"] as? UIImage
+            else {
+                return print("Invalid JSON")
+            }
             
             DispatchQueue.main.async { [weak self] in
                 self?.displayStockInfo(companyName: companyName,
@@ -93,6 +95,17 @@ extension ViewController: UIPickerViewDataSource {
         companyNameLabel.text = companyName
         companySymbolLabel.text = companySymbol
         priceLabel.text = "\(price)"
+        
+        switch priceChange {
+        case 0:
+            priceChangeLabel.textColor = .black
+        case 0...:
+            priceChangeLabel.textColor = .green
+        case ..<0:
+            priceChangeLabel.textColor = .red
+        default:
+            break
+        }
         priceChangeLabel.text = "\(priceChange)"
     }
     
@@ -121,6 +134,7 @@ extension ViewController: UIPickerViewDataSource {
         companySymbolLabel.text = "-"
         priceLabel.text = "-"
         priceChangeLabel.text = "-"
+        priceChangeLabel.textColor = .black
         
         let selectedRow = companyPickerView.selectedRow(inComponent: 0)
         let selectedSymbol = Array(companies.values)[selectedRow]
@@ -131,7 +145,6 @@ extension ViewController: UIPickerViewDataSource {
         requestQuoteUpdate()
     }
 }
-
 
 // MARK: - UIPickerViewDelegate
 

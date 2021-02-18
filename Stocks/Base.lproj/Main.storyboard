@@ -70,12 +70,20 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="JQ1-rC-DLk">
+                                <rect key="frame" x="162" y="474" width="90" height="90"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="90" id="iRG-Ga-gCo"/>
+                                    <constraint firstAttribute="width" secondItem="JQ1-rC-DLk" secondAttribute="height" multiplier="1:1" id="klP-cl-9on"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="zLD-fy-YjP" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" multiplier="0.3" id="1CD-dM-Mtq"/>
                             <constraint firstItem="Fe1-5u-AsR" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="2R9-8i-pw8"/>
+                            <constraint firstItem="JQ1-rC-DLk" firstAttribute="top" secondItem="Fe1-5u-AsR" secondAttribute="bottom" constant="16" id="BlY-TQ-ehU"/>
                             <constraint firstItem="7Un-Ns-r5R" firstAttribute="top" secondItem="nBF-Gk-NaA" secondAttribute="bottom" constant="40" id="Cif-Ll-cfc"/>
                             <constraint firstItem="zLD-fy-YjP" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="FZu-J8-frm"/>
                             <constraint firstItem="6Oa-sa-RhN" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="40" id="GT0-co-k9c"/>
@@ -91,6 +99,7 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="mz3-e1-hIE" secondAttribute="trailing" constant="40" id="WeM-Bp-B46"/>
                             <constraint firstItem="7Un-Ns-r5R" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="wB5-Cc-0mw" secondAttribute="trailing" constant="8" symbolic="YES" id="WyH-Po-q4O"/>
                             <constraint firstItem="zLD-fy-YjP" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="XIT-G0-zqg"/>
+                            <constraint firstItem="JQ1-rC-DLk" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="YzZ-NH-NMm"/>
                             <constraint firstItem="iYg-xo-FZq" firstAttribute="top" secondItem="8bD-sL-Bos" secondAttribute="bottom" constant="40" id="aQE-2P-1BH"/>
                             <constraint firstItem="8bD-sL-Bos" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="40" id="e6s-3l-zy0"/>
                             <constraint firstItem="iYg-xo-FZq" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="40" id="lEg-pr-uX2"/>
@@ -107,13 +116,14 @@
                         <outlet property="companyNameLabel" destination="n2Q-wR-iSB" id="9c5-q5-kgw"/>
                         <outlet property="companyPickerView" destination="zLD-fy-YjP" id="Dg2-yk-z69"/>
                         <outlet property="companySymbolLabel" destination="nBF-Gk-NaA" id="fVc-tF-po2"/>
+                        <outlet property="logoImage" destination="JQ1-rC-DLk" id="D77-22-Iaz"/>
                         <outlet property="priceChangeLabel" destination="mz3-e1-hIE" id="Iqd-nC-Cw4"/>
                         <outlet property="priceLabel" destination="7Un-Ns-r5R" id="Ghn-mY-kyM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="35" y="94"/>
+            <point key="canvasLocation" x="34.782608695652179" y="93.75"/>
         </scene>
     </scenes>
     <resources>
